@@ -19,6 +19,12 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: SPRING_APPLICATION_YAML
+            value: |-
+            {{- .Values.config | toYaml | nindent 14 }}
+          - name: SPRING_APPLICATION_YAML_BASE64
+            value: "{{- .Values.config | toYaml | b64enc }}"
           ports:
             - name: http
               containerPort: 80
